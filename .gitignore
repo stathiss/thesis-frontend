@@ -1,1 +1,11 @@
+# dependencies
+/node_modules
+
+# env
 env/
+
+# intellij folder
+.idea
+
+# yarn error log
+yarn-error.log
