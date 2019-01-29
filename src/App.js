@@ -1,68 +1,27 @@
-import React, { Component } from 'react';
-import {Nav, Navbar, NavItem} from 'react-bootstrap'
+import React, { Component } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Home from "./components/Home";
+import About from "./components/About";
+import Error from "./components/Error";
+import NavBar from "./components/NavBar";
 
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: [],
-      isLoaded: false
-    }
-  }
-
-  componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          isLoaded: true,
-          items: json,
-        })
-      })
-  }
-
-
-  render() {
-    let {isLoaded, items} = this.state;
-
-    const appNavbar = (
-      <Navbar inverse collapseOnSelect >
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a>Tweet-ai</a>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav pullRight>
-            <NavItem eventKey={1} href="/">home</NavItem>
-            <NavItem eventKey={2} href="/about">about</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    );
-
-    if (!isLoaded){
-      return <div>Loading...</div>;
-    } else {
-      return (
-
-        <div className="App">
-          <div >
-            {appNavbar}
-          </div>
-          <ul>
-            {items.map(item => (
-              <li key={item.id}>
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-  }
+	render() {
+		return (
+			<div>
+				<BrowserRouter>
+					<div>
+						<NavBar/>
+						<Switch>
+							<Route path={"/"} component={Home} exact/>
+							<Route path={"/about"} component={About}/>
+							<Route component={Error}/>
+						</Switch>
+					</div>
+				</BrowserRouter>
+			</div>
+		);
+	}
 }
 
 export default App;
