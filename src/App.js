@@ -7,18 +7,11 @@ import NavBar from "./components/NavBar";
 import axios from "axios";
 
 class App extends Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = {
       username: ''
     };
-
-    this.handleClick = this.handleClick.bind(this)
-  }
-
-  handleClick () {
-    axios.get('https://api.github.com/users/maecapozzi')
-      .then(response => this.setState({username: response.data.name}))
   }
 
   render() {
@@ -34,10 +27,6 @@ class App extends Component {
             </Switch>
           </div>
         </BrowserRouter>
-        <div className='button__container'>
-          <button className='button' onClick={this.handleClick}>Click Me</button>
-          <p>{this.state.username}</p>
-        </div>
       </div>
     );
   }
