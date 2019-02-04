@@ -6,14 +6,14 @@ import joy from '../assets/images/joy.png';
 import anger from '../assets/images/anger.png';
 import wheel from '../assets/images/wheel.png'
 
-import {FormControl, FormGroup, ControlLabel, Button} from "react-bootstrap";
+import {FormControl, FormGroup, ControlLabel, Button, Form} from "react-bootstrap";
 
 class Home extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      items: {},
+      items: [],
       isLoaded: false,
       form: {hashtag: ''}
     };
@@ -55,8 +55,17 @@ class Home extends Component {
 
         </div>
         <div className='intro-text' style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          Tweet-ai has learned to understand emotions for english tweet. Type a hashtag to see what the program thinks
+          Tweet-ai has learned to understand emotions for english tweets. Type a hashtag* to see what the program thinks
         </div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <median> * Hashtag must satisfy the following rules</median>
+          <ul>
+            <li>1. A hashtag must contain only letters (capital and lower case), numbers and underscores</li>
+            <li>2. A hashtag must start with the symbol '#' and then a letter</li>
+            <li>3. A hashtag must be a single word. Separations are made with underscores</li>
+          </ul>
+        </div>
+
         <div>
           <p>&nbsp;</p>
         </div>
@@ -67,8 +76,8 @@ class Home extends Component {
           <img src={fear} width={100} height={30} alt='fear'/>
           <form onSubmit={e => { e.preventDefault(); this.handleClick();}}>
             <FormGroup controlId="formControlsText">
-              <ControlLabel>Insert here: </ControlLabel>
-              <FormControl type="text" name="hashtag" placeholder="Enter hashtag text..." defaultValue={this.state.form.hashtag} onChange={this.handleChange} />
+              <ControlLabel>Insert here (ignore the #, we will put that for you): </ControlLabel>
+              <FormControl type="text" pattern="[a-zA-Z] + [a-zA-Z0-9_]{1,50}" name="hashtag" placeholder="Enter hashtag text..." defaultValue={this.state.form.hashtag} onChange={this.handleChange} />
             </FormGroup>
             <Button className='button' onClick={this.handleClick}>
               Submit
@@ -81,7 +90,13 @@ class Home extends Component {
           <img src={joy} width={120} height={50} alt='joy'/>
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          {items.hashtag}
+          <ul>
+            {items.map(item => (
+              <li key="{item.id}">
+                Name: {item.text} | id: item.id
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     );
