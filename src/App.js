@@ -4,7 +4,6 @@ import Home from "./components/Home";
 import About from "./components/About";
 import Error from "./components/Error";
 import NavBar from "./components/NavBar";
-import axios from "axios";
 
 class App extends Component {
   constructor (props) {
