@@ -5,8 +5,9 @@ import sadness from '../assets/images/sadness.png';
 import joy from '../assets/images/joy.png';
 import anger from '../assets/images/anger.png';
 import wheel from '../assets/images/wheel.png'
-
-import {FormControl, FormGroup, ControlLabel, Button, Form} from "react-bootstrap";
+import {FormControl, FormGroup, ControlLabel, Button} from "react-bootstrap";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import "react-tabs/style/react-tabs.css";
 
 class Home extends Component {
 
@@ -14,7 +15,6 @@ class Home extends Component {
     super(props);
     this.state = {
       items: [],
-      isLoaded: false,
       form: {hashtag: ''}
     };
     this.handleClick = this.handleClick.bind(this);
@@ -44,7 +44,8 @@ class Home extends Component {
 
 
   render() {
-    const {_isLoaded, items} = this.state;
+    const { items } = this.state;
+    const { img, color: backgroundColor, text: color, desc } = { img: "eec97ae821295f42e3969e082be11fac.png", color: "white", text: "black", desc: "\"I do some dumb things, and the people I love the most...they pay the price.\"" };
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh'}}>
@@ -77,7 +78,7 @@ class Home extends Component {
           <form onSubmit={e => { e.preventDefault(); this.handleClick();}}>
             <FormGroup controlId="formControlsText">
               <ControlLabel>Insert here (ignore the #, we will put that for you): </ControlLabel>
-              <FormControl type="text" pattern="[a-zA-Z] + [a-zA-Z0-9_]{1,50}" name="hashtag" placeholder="Enter hashtag text..." defaultValue={this.state.form.hashtag} onChange={this.handleChange} />
+              <FormControl type="input" pattern="[a-zA-Z0-9_]{1,50}" name="hashtag" placeholder="Enter hashtag text..." defaultValue={this.state.form.hashtag} onChange={this.handleChange} />
             </FormGroup>
             <Button className='button' onClick={this.handleClick}>
               Submit
@@ -89,14 +90,27 @@ class Home extends Component {
           <img src={anger} width={120} height={35} alt='anger'/>
           <img src={joy} width={120} height={50} alt='joy'/>
         </div>
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <ul>
-            {items.map(item => (
-              <li key="{item.id}">
-                Name: {item.text} | id: item.id
-              </li>
-            ))}
-          </ul>
+        <div>
+          <Tabs>
+            <TabList className='tabs-list'>
+              <Tab style={{ backgroundColor }} className="tabs">Title 1</Tab>
+              <Tab style={{ backgroundColor }} className="tabs">Title 2</Tab>
+            </TabList>
+            <TabPanel style={{ backgroundColor, color }} className="tabs-panel">
+              <div style={{width: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <ul>
+                  {items.map(item => (
+                    <li key="{item.id}">
+                      {item.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </TabPanel>
+            <TabPanel style={{ backgroundColor, color }} className="tabs-panel">
+              Any content 2
+            </TabPanel>
+          </Tabs>
         </div>
       </div>
     );

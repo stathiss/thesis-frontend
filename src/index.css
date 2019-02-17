@@ -57,6 +57,28 @@ code {
     height: 90px;
 }
 
+.tabs-list {
+    margin: 0;
+    padding: 0;
+}
+
+.tabs {
+    display: inline-block;
+    position: relative;
+    list-style: none;
+    padding: 6px 12px 0;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    margin-right: 2px;
+}
+
+.tabs-panel {
+    padding: 10px;
+    display: none;
+    z-index: 2;
+    position: relative;
+}
+
 .form-control {
     width: 400px;
 }
