@@ -12,6 +12,46 @@ code {
     monospace;
 }
 
+.circles {
+    display: flex;
+    left: 20%;
+}
+.circle-with-text {
+    background: linear-gradient(#0084b4, white);
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    text-align: center;
+    margin: 60px 150px 50px;
+    font-size: 15px;
+    padding: 15px;
+    display: flex;
+    height: 400px;
+    width: 400px;
+    color: black;
+}
+
+.circle-with-text h1 {
+    position: absolute;
+    top: -60px;
+}
+
+.circle-with-text img {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.circle-with-text .score {
+    position: absolute;
+    bottom: 0;
+    font-size: 35px}
+
+
+.multi-line-text {
+    font-size: 20px;
+}
 .navbar-inverse  {
     background-color: #0084b4;
     color: #0084b4;
@@ -57,6 +97,10 @@ code {
     height: 90px;
 }
 
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #c0deed;
+}
+
 .tabs-list {
     margin: 0;
     padding: 0;
@@ -68,13 +112,20 @@ code {
     list-style: none;
     padding: 6px 12px 0;
     cursor: pointer;
+    border: black;
     border-radius: 5px 5px 0 0;
-    margin-right: 2px;
+    margin-right: 5px;
+    font-size: large;
+}
+.react-tabs__tab--selected {
+    padding: 5px;
+    margin-right: 5px;
 }
 
 .tabs-panel {
     padding: 10px;
     display: none;
+    border: black;
     z-index: 2;
     position: relative;
 }
