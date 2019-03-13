@@ -126,7 +126,7 @@ class Home extends Component {
                 </thead>
                 <tbody>
                 {items.map(item => (
-                  <tr>
+                  <tr onClick={ () => window.open('https://twitter.com/statuses/' + item.id, '_blank') }>
                     <th>{item.counter}</th>
                     <td>{item.author}</td>
                     <td>{item.text}</td>
