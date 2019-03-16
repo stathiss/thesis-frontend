@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { Chart } from "react-charts";
+import {FormControl, FormGroup, ControlLabel} from "react-bootstrap";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { MagicSpinner } from "react-spinners-kit";
 import logo from '../assets/images/logo_2.png';
 import fear from '../assets/images/fear.png';
 import sadness from '../assets/images/sadness.png';
@@ -8,9 +12,6 @@ import fear_emoji from '../assets/images/fear_emoji.png';
 import sadness_emoji from '../assets/images/sadness_emoji.png';
 import joy_emoji from '../assets/images/joy_emoji.png';
 import anger_emoji from '../assets/images/anger_emoji.png';
-import {FormControl, FormGroup, ControlLabel} from "react-bootstrap";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { MagicSpinner } from "react-spinners-kit";
 import "react-tabs/style/react-tabs.css";
 
 class Home extends Component {
@@ -18,10 +19,12 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
       form: {hashtag: ''},
       isLoaded: false,
-      loading: false
+      loading: false,
+      top: [],
+      trends: [],
+      tweets: []
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -38,8 +41,10 @@ class Home extends Component {
         console.log(this.state);
         this.setState({
           isLoaded: true,
-          items: json['tweets'],
-          loading: false
+          loading: false,
+          trends: json['trends'],
+          top: json['top'],
+          tweets: json['tweets']
         });
       });
   }
@@ -52,8 +57,7 @@ class Home extends Component {
 
 
   render() {
-    const { items, isLoaded, loading} = this.state;
-
+    const { tweets, isLoaded, loading, trends, top} = this.state;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh'}}>
@@ -106,16 +110,16 @@ class Home extends Component {
           <img src={joy} width={120} height={50} alt='joy'/>
         </div>
         <div style={{ position: 'relative', left: '15%', width: '70%' }}>
-          { isLoaded &&
+          {
           <Tabs>
             <TabList className='tabs-list'>
-              <Tab style={{ 'background-color': '#0084b4', width: 250 }} className="tabs"> Tweets </Tab>
-              <Tab style={{ 'background-color': 'white', width: 250 }} className="tabs"> Statistics </Tab>
-              <Tab style={{ 'background-color': '#0084b4', width: 250 }} className="tabs"> Regression Plots </Tab>
-              <Tab style={{ 'background-color': 'white', width: 250 }} className="tabs"> Ordinal Classification Plots </Tab>
-              <Tab style={{ 'background-color': '#0084b4', width: 250 }} className="tabs"> Classification Plots </Tab>
+              <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className="tabs"> Tweets </Tab>
+              <Tab style={{ backgroundColor: 'white', width: 250 }} className="tabs"> Top Tweets </Tab>
+              <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className="tabs"> Regression Plots </Tab>
+              <Tab style={{ backgroundColor: 'white', width: 250 }} className="tabs"> Ordinal Classification Plots </Tab>
+              <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className="tabs"> Classification Plots </Tab>
             </TabList>
-            <TabPanel style={{ 'background-color': '#0084b4', color:'black' }} className="tabs-panel">
+            <TabPanel style={{ backgroundColor: '#0084b4', color:'black' }} className="tabs-panel">
               <table className="table table-hover">
                 <thead>
                 <tr>
@@ -125,7 +129,7 @@ class Home extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {items.map(item => (
+                {tweets.sort((a, b) => { return a.counter - b.counter} ).map(item => (
                   <tr onClick={ () => window.open('https://twitter.com/statuses/' + item.id, '_blank') }>
                     <th>{item.counter}</th>
                     <td>{item.author}</td>
@@ -135,7 +139,7 @@ class Home extends Component {
                 </tbody>
               </table>
             </TabPanel>
-            <TabPanel style={{ 'background-color': 'white', color: 'black' }} className="tabs-panel">
+            <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className="tabs-panel">
               <h1 align="center" style={{ 'font-size': '50px'}}>Top Tweets</h1>
               <div className="circles">
                 <div className="circle-with-text multi-line-text ">
@@ -166,14 +170,113 @@ class Home extends Component {
                 </div>
               </div>
             </TabPanel>
-            <TabPanel style={{ 'background-color': '#0084b4', color: 'black' }} className="tabs-panel">
-              Any content 2
+            <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className="tabs-panel">
+              { ['fear', 'joy', 'sadness', 'anger'].map(emotion => (
+                <div>
+                  <h1 align="center" style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
+
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "400px",
+                      backgroundColor: 'white'
+                    }}
+                  >
+                    <Chart
+                      data={[
+                        {
+                          label: 'Fear',
+                          data: tweets.sort((a, b) => { return a.regression[emotion] - b.regression[emotion];} ).map(item => ([item.counter, item.regression[emotion], item.text]))
+                        }
+                      ]}
+                      series={{type: 'bar'}}
+                      axes={[
+                        {primary: true, type: 'ordinal', position: 'bottom'},
+                        {position: 'left', type: 'linear', stacked: true},
+                      ]}
+                      primaryCursor
+                      tooltip
+                    />
+                  </div>
+                  <div><br/></div>
+                </div>
+              ))}
             </TabPanel>
-            <TabPanel style={{ 'background-color': 'white', color: 'black' }} className="tabs-panel">
-              Any content 2
+            <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className="tabs-panel">
+              { ['fear', 'joy', 'sadness', 'anger'].map(emotion => (
+                <div>
+                  <h1 align="center" style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
+                  <div align="right"> Avg = 0.54</div>
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "400px",
+                      backgroundColor: '0084b4'
+                    }}
+                  >
+                    <Chart
+                      data={[
+                        {
+                          label: "Fear",
+                          data: [
+                            ['No ' + emotion + ' can be inferred', 12],
+                            ['Low amount of ' + emotion + ' can be inferred', 34],
+                            ['Moderate amount of ' + emotion + ' can be inferred', 80],
+                            ['High amount of ' + emotion + ' can be inferred', 6]]
+                        }
+                      ]}
+                      series={{type: 'bar', color: 'red'}}
+                      axes={[
+                        {primary: true, type: 'ordinal', position: 'bottom'},
+                        {position: 'left', type: 'linear', stacked: true},
+                      ]}
+                      primaryCursor
+                      tooltip
+                    />
+                  </div>
+                  <div><br/></div>
+                </div>
+              ))}
             </TabPanel>
-            <TabPanel style={{ 'background-color': '#0084b4', color: 'black' }} className="tabs-panel">
-              Any content 2
+            <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className="tabs-panel">
+              <div>
+                <h1 align="center" style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>EMOTIONS</h1>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "400px",
+                    backgroundColor: 'white'
+                  }}
+                >
+                  <Chart
+                    data={[
+                      {
+                        label: "Fear",
+                        data: [
+                          ['Anger', 12],
+                          ['Anticipation', 34],
+                          ['Disgust', 80],
+                          ['Fear', 21],
+                          ['Joy', 45],
+                          ['Love', 9],
+                          ['Optimism', 63],
+                          ['Pessimism', 22],
+                          ['Sadness', 11],
+                          ['Trust', 41],
+                        ]
+                      }
+                    ]}
+                    series={{type: 'bar', color: 'red'}}
+                    axes={[
+                      {primary: true, type: 'ordinal', position: 'bottom'},
+                      {position: 'left', type: 'linear', stacked: true},
+                    ]}
+                    primaryCursor
+                    tooltip
+                  />
+                </div>
+                <div><br/></div>
+              </div>
             </TabPanel>
           </Tabs> }
         </div>
