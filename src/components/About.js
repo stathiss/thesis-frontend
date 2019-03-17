@@ -2,9 +2,9 @@ import React from "react";
 
 const About = () =>  {
 	return (
-		<div>
-			<p> About </p>
-		</div>
+      <div style={{ fontSize: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh'}}>
+        ABOUT
+      </div>
 	);
 };
 
