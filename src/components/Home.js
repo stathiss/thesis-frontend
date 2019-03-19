@@ -19,12 +19,15 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      averages: [],
       form: {hashtag: ''},
       isLoaded: false,
       loading: false,
+      ordinal_class: [],
       top: [],
       trends: [],
-      tweets: []
+      tweets: [],
+      searches: []
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -37,12 +40,21 @@ class Home extends Component {
           trends: json['trends']
         });
       });
+    fetch('http://127.0.0.1:5000/searches',
+      {
+        method: 'GET'
+      }).then(res => res.json())
+      .then(json => {
+        this.setState({
+          searches: json['searches']
+        });
+      });
   }
 
   handleClick() {
     this.setState({ loading: true });
     console.error(this.state.form.hashtag);
-    fetch('http://127.0.0.1:5000?hashtag=' + this.state.form.hashtag,
+    fetch('http://127.0.0.1:5000?hashtag=' + (this.state.form.hashtag.startsWith('#') ? '%23'+this.state.form.hashtag.substr(1) : this.state.form.hashtag),
     {
       method: 'GET'
     }).then(res => res.json())
@@ -52,6 +64,8 @@ class Home extends Component {
         this.setState({
           isLoaded: true,
           loading: false,
+          averages: json['averages'],
+          ordinal_class: json['ordinal_class'],
           top: json['top'],
           tweets: json['tweets']
         });
@@ -61,17 +75,20 @@ class Home extends Component {
   handleChange(event) {
     console.log(event);
     let fieldName = event.target.name;
-    let fleldVal = event.target.value;
-    this.setState({form: {...this.state.form, [fieldName]: fleldVal}})
+    let fieldVal = '#' + event.target.value;
+    this.setState({form: {...this.state.form, [fieldName]: fieldVal}})
   }
 
-  onPickColor(e){
-    console.log('[onPickColor]', this.hashtag );
-    this.setState({ form: { ...this.state.form, hashtag: (this.hashtag.value.startsWith('#') ? this.hashtag.value.substr(1) : this.hashtag.value) }});
+  onPickTrend(){
+    this.setState({ form: { ...this.state.form, hashtag: this.hashtag.value }});
+  }
+
+  onPickSearch(){
+    this.setState({ form: { ...this.state.form, hashtag: this.value }});
   }
 
   render() {
-    const { tweets, isLoaded, loading, trends, top} = this.state;
+    const { averages, tweets, isLoaded, loading, ordinal_class, trends, searches, top} = this.state;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh'}}>
@@ -87,11 +104,10 @@ class Home extends Component {
           <median> * Hashtag must satisfy the following rules</median>
           <ul>
             <li>1. A hashtag must contain only letters (capital and lower case), numbers and underscores</li>
-            <li>2. A hashtag must start with the symbol '#' and then a letter</li>
+            <li>2. A hashtag must start with the symbol '#' or a letter if it is a Trend</li>
             <li>3. A hashtag must be a single word. Separations are made with underscores</li>
           </ul>
         </div>
-
         <div>
           <p>&nbsp;</p>
         </div>
@@ -99,7 +115,7 @@ class Home extends Component {
           <p>&nbsp;</p>
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <img src={fear} width={100} height={30} alt='fear'/>
+          <img src={fear} width={120} height={40} alt='fear'/>
           { loading ? (
             <MagicSpinner
               size={200}
@@ -112,6 +128,7 @@ class Home extends Component {
               <TabList className='tabs-list'>
                 <Tab  className='tabs'> Search </Tab>
                 <Tab  className='tabs'> Top Trends </Tab>
+                <Tab  className='tabs'> Previous Searches </Tab>
               </TabList>
               <TabPanel>
                 <div><br/></div>
@@ -125,11 +142,25 @@ class Home extends Component {
                 <FormGroup controlId="formControlsSelect">
                   <ControlLabel>Select Trend (English only available)</ControlLabel>
                   <FormControl
-                    onChange={this.onPickColor.bind(this)}
+                    onChange={this.onPickTrend.bind(this)}
                     inputRef={ el => this.hashtag=el }
-                    componentClass="select" placeholder="select">
+                    componentClass="select" placeholder={this.hashtag}>
                     {trends.map(item => (
                       <option value={item.name}> {item.name} </option>
+                    ))}
+                  </FormControl>
+                </FormGroup>
+              </TabPanel>
+              <TabPanel>
+                <div><br/></div>
+                <FormGroup controlId="formControlsSelect">
+                  <ControlLabel>Select Previous Searches</ControlLabel>
+                  <FormControl
+                    onChange={this.onPickSearch.bind(this)}
+                    inputRef={ el => this.search=el }
+                    componentClass="select" >
+                    {searches.map(item => (
+                      <option value={item}> {item} </option>
                     ))}
                   </FormControl>
                 </FormGroup>
@@ -138,15 +169,15 @@ class Home extends Component {
             <button type='submit'>Submit</button>
           </Form>
             )}
-          <img src={sadness} width={100} height={40} alt='sadness'/>
+          <img src={sadness} width={140} height={60} alt='sadness'/>
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <img src={anger} width={120} height={35} alt='anger'/>
-          <img src={joy} width={120} height={50} alt='joy'/>
+          <img src={anger} width={140} height={50} alt='anger'/>
+          <img src={joy} width={140} height={60} alt='joy'/>
         </div>
         {isLoaded &&
           <div className='intro-text' style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            Current Hashtag: #{this.state.form.hashtag}
+            Current Hashtag / Trend: {this.state.form.hashtag}
           </div>
         }
         <div style={{ position: 'relative', left: '15%', width: '70%' }}>
@@ -182,39 +213,39 @@ class Home extends Component {
             <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className='tabs-panel'>
               <h1 align='center' style={{ 'font-size': '50px'}}>Top Tweets</h1>
               <div className='circles'>
+                <div className='circle-with-text multi-line-text'>
+                  <h1>Anger</h1>
+                  {top['anger']['tweet']}
+                  <img style={{ right: 0, bottom: 0}} src={anger_emoji} width={125} height={125} alt='anger_emoji'/>
+                  <div className='score'> {top['anger']['intensity']} </div>
+                </div>
                 <div className='circle-with-text multi-line-text '>
                   <h1>Fear</h1>
-                  'Hello..from above our magnificent planet, Earth'#amazing #beautiful #Earth #sky #nature #sunset #love #sunrise #magnificent #sky #planet #hello #ocean #quote #wanderlust #photo #ExpressionQuote #CreativityWords #LifeQuotes
-                  <img style={{ right: 0, bottom: 0}} src={fear_emoji} width={125} height={125} alt='fear_emoji'/>
-                  <div className='score'> 0.87 </div>
-                </div>
-                <div className='circle-with-text multi-line-text'>
-                  <h1>Sadness</h1>
-                  'Hello..from above our magnificent planet, Earth'#amazing #beautiful #Earth #sky #nature #sunset #love #sunrise #magnificent #sky #planet #hello #ocean #quote #wanderlust #photo #ExpressionQuote #CreativityWords #LifeQuotes
-                  <img style={{ left: 0, bottom: 0}} src={sadness_emoji} width={125} height={125} alt='sadness_emoji'/>
-                  <div className='score'> 0.88 </div>
+                  {top['fear']['tweet']}
+                  <img style={{ left: 0, bottom: 0}} src={fear_emoji} width={125} height={125} alt='fear_emoji'/>
+                  <div className='score'> {top['fear']['intensity']} </div>
                 </div>
               </div>
               <div className='circles'>
                 <div className='circle-with-text multi-line-text'>
                   <h1>Joy</h1>
-                  'Hello..from above our magnificent planet, Earth'#amazing #beautiful #Earth #sky #nature #sunset #love #sunrise #magnificent #sky #planet #hello #ocean #quote #wanderlust #photo #ExpressionQuote #CreativityWords #LifeQuotes
+                  {top['joy']['tweet']}
                   <img style={{ right: 0, bottom: 0}} src={joy_emoji} width={125} height={125} alt='joy_emoji'/>
-                  <div className='score'> 0.66 </div>
+                  <div className='score'> {top['fear']['intensity']} </div>
                 </div>
                 <div className='circle-with-text multi-line-text'>
-                  <h1>Anger</h1>
-                  'Hello..from above our magnificent planet, Earth'#amazing #beautiful #Earth #sky #nature #sunset #love #sunrise #magnificent #sky #planet #hello #ocean #quote #wanderlust #photo #ExpressionQuote #CreativityWords #LifeQuotes
-                  <img style={{ left: 0, bottom: 0}} src={anger_emoji} width={125} height={125} alt='anger_emoji'/>
-                  <div className='score'> 0.65 </div>
+                  <h1>Sadness</h1>
+                  {top['sadness']['tweet']}
+                  <img style={{ left: 0, bottom: 0}} src={sadness_emoji} width={125} height={125} alt='sadness_emoji'/>
+                  <div className='score'> {top['sadness']['intensity']} </div>
                 </div>
               </div>
             </TabPanel>
             <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className='tabs-panel'>
-              { ['fear', 'joy', 'sadness', 'anger'].map(emotion => (
+              { ['anger', 'fear', 'joy', 'sadness'].map(emotion => (
                 <div>
                   <h1 align='center' style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
-
+                  <div align='right'> Avg = {averages[emotion]} </div>
                   <div
                     style={{
                       width: '100%',
@@ -225,7 +256,7 @@ class Home extends Component {
                     <Chart
                       data={[
                         {
-                          label: 'Fear',
+                          label: 'Intensity',
                           data: tweets.sort((a, b) => { return a.regression[emotion] - b.regression[emotion];} ).map(item => ([item.counter, item.regression[emotion], item.text]))
                         }
                       ]}
@@ -243,10 +274,9 @@ class Home extends Component {
               ))}
             </TabPanel>
             <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className='tabs-panel'>
-              { ['fear', 'joy', 'sadness', 'anger'].map(emotion => (
+              { [ 'anger', 'fear', 'joy', 'sadness'].map(emotion => (
                 <div>
                   <h1 align='center' style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
-                  <div align='right'> Avg = 0.54</div>
                   <div
                     style={{
                       width: '100%',
@@ -257,12 +287,12 @@ class Home extends Component {
                     <Chart
                       data={[
                         {
-                          label: 'Fear',
+                          label: 'Sum',
                           data: [
-                            ['No ' + emotion + ' can be inferred', 12],
-                            ['Low amount of ' + emotion + ' can be inferred', 34],
-                            ['Moderate amount of ' + emotion + ' can be inferred', 80],
-                            ['High amount of ' + emotion + ' can be inferred', 6]]
+                            ['No ' + emotion + ' can be inferred', ordinal_class[emotion][0]],
+                            ['Low amount of ' + emotion + ' can be inferred', ordinal_class[emotion][1]],
+                            ['Moderate amount of ' + emotion + ' can be inferred', ordinal_class[emotion][2]],
+                            ['High amount of ' + emotion + ' can be inferred', ordinal_class[emotion][3]]]
                         }
                       ]}
                       series={{type: 'bar', color: 'red'}}
