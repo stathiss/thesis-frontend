@@ -16,6 +16,7 @@ code {
     display: flex;
     left: 20%;
 }
+
 .circle-with-text {
     background: linear-gradient(#0084b4, white);
     position: relative;
@@ -107,6 +108,7 @@ code {
 }
 
 .tabs {
+    background: linear-gradient(white, #c0deed);
     display: inline-block;
     position: relative;
     list-style: none;
@@ -118,6 +120,7 @@ code {
     font-size: large;
 }
 .react-tabs__tab--selected {
+    background: linear-gradient(#c0deed, white);
     padding: 5px;
     margin-right: 5px;
 }

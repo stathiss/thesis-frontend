@@ -84,7 +84,7 @@ class Home extends Component {
   }
 
   onPickSearch(){
-    this.setState({ form: { ...this.state.form, hashtag: this.value }});
+    this.setState({ form: { ...this.state.form, hashtag: this.hashtag.value }});
   }
 
   render() {
@@ -124,7 +124,7 @@ class Home extends Component {
             />
             ) : (
           <Form onSubmit={e => { e.preventDefault(); this.handleClick();}}>
-            <Tabs>
+            <Tabs >
               <TabList className='tabs-list'>
                 <Tab  className='tabs'> Search </Tab>
                 <Tab  className='tabs'> Top Trends </Tab>
@@ -157,16 +157,16 @@ class Home extends Component {
                   <ControlLabel>Select Previous Searches</ControlLabel>
                   <FormControl
                     onChange={this.onPickSearch.bind(this)}
-                    inputRef={ el => this.search=el }
-                    componentClass="select" >
+                    inputRef={ el => this.hashtag=el }
+                    componentClass="select" placeholder={this.hashtag}>
                     {searches.map(item => (
-                      <option value={item}> {item} </option>
+                      <option value={item.name}> {item.name} </option>
                     ))}
                   </FormControl>
                 </FormGroup>
               </TabPanel>
             </Tabs>
-            <button type='submit'>Submit</button>
+            <button type='submit' disabled={this.state.form.hashtag === ''}>Submit</button>
           </Form>
             )}
           <img src={sadness} width={140} height={60} alt='sadness'/>
@@ -212,14 +212,14 @@ class Home extends Component {
             </TabPanel>
             <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className='tabs-panel'>
               <h1 align='center' style={{ 'font-size': '50px'}}>Top Tweets</h1>
-              <div className='circles'>
+              <div className='circles' onClick={ () => window.open('https://twitter.com/statuses/' + top['anger']['id'], '_blank') }>
                 <div className='circle-with-text multi-line-text'>
                   <h1>Anger</h1>
                   {top['anger']['tweet']}
                   <img style={{ right: 0, bottom: 0}} src={anger_emoji} width={125} height={125} alt='anger_emoji'/>
                   <div className='score'> {top['anger']['intensity']} </div>
                 </div>
-                <div className='circle-with-text multi-line-text '>
+                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['fear']['id'], '_blank') }>
                   <h1>Fear</h1>
                   {top['fear']['tweet']}
                   <img style={{ left: 0, bottom: 0}} src={fear_emoji} width={125} height={125} alt='fear_emoji'/>
@@ -227,13 +227,13 @@ class Home extends Component {
                 </div>
               </div>
               <div className='circles'>
-                <div className='circle-with-text multi-line-text'>
+                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['joy']['id'], '_blank') }>
                   <h1>Joy</h1>
                   {top['joy']['tweet']}
                   <img style={{ right: 0, bottom: 0}} src={joy_emoji} width={125} height={125} alt='joy_emoji'/>
                   <div className='score'> {top['fear']['intensity']} </div>
                 </div>
-                <div className='circle-with-text multi-line-text'>
+                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['sadness']['id'], '_blank') }>
                   <h1>Sadness</h1>
                   {top['sadness']['tweet']}
                   <img style={{ left: 0, bottom: 0}} src={sadness_emoji} width={125} height={125} alt='sadness_emoji'/>
