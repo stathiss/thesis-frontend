@@ -130,18 +130,19 @@ class Home extends Component {
                 <Tab  className='tabs'> Top Trends </Tab>
                 <Tab  className='tabs'> Previous Searches </Tab>
               </TabList>
-              <TabPanel>
+              <TabPanel style={{width: '366px','border-radius': '2px', 'background': 'linear-gradient(white, #c0deed)'}}>
                 <div><br/></div>
                 <FormGroup controlId='formControlsText'>
                   <ControlLabel>Insert here (ignore the #, we will put that for you): </ControlLabel>
-                  <FormControl autoComplete='off' type='input' pattern='[a-zA-Z0-9_]+[a-zA-Z0-9_]{1,50}' name='hashtag' placeholder='Enter hashtag text...' defaultValue={this.state.form.hashtag} onChange={this.handleChange} />
+                  <FormControl style={{width: '366px'}} autoComplete='off' type='input' pattern='[a-zA-Z0-9_]+[a-zA-Z0-9_]{1,50}' name='hashtag' placeholder='Enter hashtag text...' defaultValue={(this.state.form.hashtag.startsWith('#') ? this.state.form.hashtag.substr(1) : this.state.form.hashtag)} onChange={this.handleChange} />
                 </FormGroup>
               </TabPanel>
-              <TabPanel>
+              <TabPanel style={{width: '366px', 'border-radius': '2px', 'background': 'linear-gradient(white, #c0deed)'}}>
                 <div><br/></div>
                 <FormGroup controlId="formControlsSelect">
                   <ControlLabel>Select Trend (English only available)</ControlLabel>
                   <FormControl
+                    style={{width: '366px'}}
                     onChange={this.onPickTrend.bind(this)}
                     inputRef={ el => this.hashtag=el }
                     componentClass="select" placeholder={this.hashtag}>
@@ -151,11 +152,12 @@ class Home extends Component {
                   </FormControl>
                 </FormGroup>
               </TabPanel>
-              <TabPanel>
+              <TabPanel style={{ width: '366px', 'border-radius': '2px', 'background': 'linear-gradient(white, #c0deed)'}}>
                 <div><br/></div>
                 <FormGroup controlId="formControlsSelect">
                   <ControlLabel>Select Previous Searches</ControlLabel>
                   <FormControl
+                    style={{width: '366px'}}
                     onChange={this.onPickSearch.bind(this)}
                     inputRef={ el => this.hashtag=el }
                     componentClass="select" placeholder={this.hashtag}>
@@ -201,7 +203,7 @@ class Home extends Component {
                 </thead>
                 <tbody>
                 {tweets.sort((a, b) => { return a.counter - b.counter} ).map(item => (
-                  <tr onClick={ () => window.open('https://twitter.com/statuses/' + item.id, '_blank') }>
+                  <tr style={{cursor: 'pointer'}} onClick={ () => window.open('https://twitter.com/statuses/' + item.id, '_blank') }>
                     <th>{item.counter}</th>
                     <td>{item.author}</td>
                     <td>{item.text}</td>
@@ -211,7 +213,7 @@ class Home extends Component {
               </table>
             </TabPanel>
             <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className='tabs-panel'>
-              <h1 align='center' style={{ 'font-size': '50px'}}>Top Tweets</h1>
+              <h1 align='center' style={{ fontSize: '50px'}}>Top Tweets</h1>
               <div className='circles' onClick={ () => window.open('https://twitter.com/statuses/' + top['anger']['id'], '_blank') }>
                 <div className='circle-with-text multi-line-text'>
                   <h1>Anger</h1>
@@ -231,7 +233,7 @@ class Home extends Component {
                   <h1>Joy</h1>
                   {top['joy']['tweet']}
                   <img style={{ right: 0, bottom: 0}} src={joy_emoji} width={125} height={125} alt='joy_emoji'/>
-                  <div className='score'> {top['fear']['intensity']} </div>
+                  <div className='score'> {top['joy']['intensity']} </div>
                 </div>
                 <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['sadness']['id'], '_blank') }>
                   <h1>Sadness</h1>
@@ -245,7 +247,7 @@ class Home extends Component {
               { ['anger', 'fear', 'joy', 'sadness'].map(emotion => (
                 <div>
                   <h1 align='center' style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
-                  <div align='right'> Avg = {averages[emotion]} </div>
+                  <div align='right' style={{fontSize: '30px'}}> Avg = {averages[emotion]} </div>
                   <div
                     style={{
                       width: '100%',
@@ -263,7 +265,7 @@ class Home extends Component {
                       series={{type: 'bar'}}
                       axes={[
                         {primary: true, type: 'ordinal', position: 'bottom'},
-                        {position: 'left', type: 'linear', stacked: true},
+                        {position: 'left', type: 'linear', stacked: true, hardMax: 1.0},
                       ]}
                       primaryCursor
                       tooltip
@@ -298,7 +300,7 @@ class Home extends Component {
                       series={{type: 'bar', color: 'red'}}
                       axes={[
                         {primary: true, type: 'ordinal', position: 'bottom'},
-                        {position: 'left', type: 'linear', stacked: true},
+                        {position: 'left', type: 'linear', stacked: true, hardMax: 100},
                       ]}
                       primaryCursor
                       tooltip
