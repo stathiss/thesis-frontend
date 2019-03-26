@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Chart } from 'react-charts';
-import {FormControl, Form, FormGroup, ControlLabel,} from 'react-bootstrap';
+import {FormControl, Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { MagicSpinner } from 'react-spinners-kit';
 import logo from '../assets/images/logo_2.png';
@@ -20,7 +20,7 @@ class Home extends Component {
     super(props);
     this.state = {
       averages: [],
-      form: {hashtag: ''},
+      form: {hashtag: '', number: 100},
       isLoaded: false,
       loading: false,
       ordinal_class: [],
@@ -54,7 +54,7 @@ class Home extends Component {
   handleClick() {
     this.setState({ loading: true });
     console.error(this.state.form.hashtag);
-    fetch('http://127.0.0.1:5000?hashtag=' + (this.state.form.hashtag.startsWith('#') ? '%23'+this.state.form.hashtag.substr(1) : this.state.form.hashtag),
+    fetch('http://127.0.0.1:5000?hashtag=' + (this.state.form.hashtag.startsWith('#') ? '%23'+this.state.form.hashtag.substr(1) : this.state.form.hashtag) + '&number=' + this.state.form.number,
     {
       method: 'GET'
     }).then(res => res.json())
@@ -86,6 +86,11 @@ class Home extends Component {
   onPickSearch(){
     this.setState({ form: { ...this.state.form, hashtag: this.hashtag.value }});
   }
+
+  onPickNumber(){
+    this.setState({ form: { ...this.state.form, number: this.number.value }});
+  }
+
 
   render() {
     const { averages, tweets, isLoaded, loading, ordinal_class, trends, searches, top} = this.state;
@@ -124,6 +129,21 @@ class Home extends Component {
             />
             ) : (
           <Form onSubmit={e => { e.preventDefault(); this.handleClick();}}>
+            <FormGroup>
+              <label htmlFor="text" style={{float:'left', marginRight: '5px', position: 'relative', top: '6px' }}>Max number of tweets: </label>
+              <FormControl
+                style={{width: '100px'}}
+                onChange={this.onPickNumber.bind(this)}
+                inputRef={ el => this.number=el }
+                defaultValue={this.state.form.number}
+                componentClass="select" placeholder={this.number}>
+                <option value={20} >20 </option>
+                <option value={40}>40 </option>
+                <option value={60}>60 </option>
+                <option value={80}>80 </option>
+                <option value={100}>100 </option>
+              </FormControl>
+            </FormGroup>
             <Tabs >
               <TabList className='tabs-list'>
                 <Tab  className='tabs'> Search </Tab>
@@ -177,6 +197,7 @@ class Home extends Component {
           <img src={anger} width={140} height={50} alt='anger'/>
           <img src={joy} width={140} height={60} alt='joy'/>
         </div>
+
         {isLoaded &&
           <div className='intro-text' style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             Current Hashtag / Trend: {this.state.form.hashtag}
@@ -246,8 +267,8 @@ class Home extends Component {
             <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className='tabs-panel'>
               { ['anger', 'fear', 'joy', 'sadness'].map(emotion => (
                 <div>
-                  <h1 align='center' style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
-                  <div align='right' style={{fontSize: '30px'}}> Avg = {averages[emotion]} </div>
+                  <h1 align='center' style={{fontSize: '40px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
+                  <div align='right' style={{fontSize: '20px'}}> Avg = {averages[emotion]} </div>
                   <div
                     style={{
                       width: '100%',
@@ -278,7 +299,7 @@ class Home extends Component {
             <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className='tabs-panel'>
               { [ 'anger', 'fear', 'joy', 'sadness'].map(emotion => (
                 <div>
-                  <h1 align='center' style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
+                  <h1 align='center' style={{fontSize: '40px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
                   <div
                     style={{
                       width: '100%',
@@ -291,15 +312,15 @@ class Home extends Component {
                         {
                           label: 'Sum',
                           data: [
-                            ['No ' + emotion + ' can be inferred', ordinal_class[emotion][0]],
-                            ['Low amount of ' + emotion + ' can be inferred', ordinal_class[emotion][1]],
-                            ['Moderate amount of ' + emotion + ' can be inferred', ordinal_class[emotion][2]],
-                            ['High amount of ' + emotion + ' can be inferred', ordinal_class[emotion][3]]]
+                            ['No ' + emotion + ' can be inferred  can be inferred', ordinal_class[emotion][0]],
+                            ['Low amount of ' + emotion + ' can be inferred can be inferred', ordinal_class[emotion][1]],
+                            ['Moderate amount of ' + emotion + ' can be inferred can be inferred', ordinal_class[emotion][2]],
+                            ['High amount of ' + emotion + ' can be inferred can be inferred', ordinal_class[emotion][3]]]
                         }
                       ]}
                       series={{type: 'bar', color: 'red'}}
                       axes={[
-                        {primary: true, type: 'ordinal', position: 'bottom'},
+                        {primary: true, type: 'ordinal', position: 'bottom', fontSize: 40},
                         {position: 'left', type: 'linear', stacked: true, hardMax: 100},
                       ]}
                       primaryCursor
