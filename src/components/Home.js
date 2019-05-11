@@ -14,8 +14,9 @@ import joy_emoji from '../assets/images/joy_emoji.png';
 import anger_emoji from '../assets/images/anger_emoji.png';
 import 'react-tabs/style/react-tabs.css';
 
-class Home extends Component {
+const BACKEND_API = 'http://127.0.0.1:5000';
 
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +32,7 @@ class Home extends Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    fetch('http://127.0.0.1:5000/trends',
+    fetch(BACKEND_API + '/trends',
       {
         method: 'GET'
       }).then(res => res.json())
@@ -40,7 +41,7 @@ class Home extends Component {
           trends: json['trends']
         });
       });
-    fetch('http://127.0.0.1:5000/searches',
+    fetch(BACKEND_API + '/searches',
       {
         method: 'GET'
       }).then(res => res.json())
@@ -54,7 +55,7 @@ class Home extends Component {
   handleClick() {
     this.setState({ loading: true });
     console.error(this.state.form.hashtag);
-    fetch('http://127.0.0.1:5000?hashtag=' + (this.state.form.hashtag.startsWith('#') ? '%23'+this.state.form.hashtag.substr(1) : this.state.form.hashtag) + '&number=' + this.state.form.number,
+    fetch(BACKEND_API + '?hashtag=' + (this.state.form.hashtag.startsWith('#') ? '%23'+this.state.form.hashtag.substr(1) : this.state.form.hashtag) + '&number=' + this.state.form.number,
     {
       method: 'GET'
     }).then(res => res.json())
@@ -75,7 +76,7 @@ class Home extends Component {
   handleChange(event) {
     console.log(event);
     let fieldName = event.target.name;
-    let fieldVal = '#' + event.target.value;
+    let fieldVal = event.target.value;
     this.setState({form: {...this.state.form, [fieldName]: fieldVal}})
   }
 
@@ -103,7 +104,7 @@ class Home extends Component {
 
         </div>
         <div className='intro-text' style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          Tweet-ai has learned to understand emotions for english tweets. Type a hashtag* to see what the program thinks
+          Tweet-ai has learned to understand emotions for english tweets. Type a hashtag* or a Trend to see what the program thinks
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <median> * Hashtag must satisfy the following rules</median>
@@ -153,8 +154,8 @@ class Home extends Component {
               <TabPanel style={{width: '366px','border-radius': '2px', 'background': 'linear-gradient(white, #c0deed)'}}>
                 <div><br/></div>
                 <FormGroup controlId='formControlsText'>
-                  <ControlLabel>Insert here (ignore the #, we will put that for you): </ControlLabel>
-                  <FormControl style={{width: '366px'}} autoComplete='off' type='input' pattern='[a-zA-Z0-9_]+[a-zA-Z0-9_]{1,50}' name='hashtag' placeholder='Enter hashtag text...' defaultValue={(this.state.form.hashtag.startsWith('#') ? this.state.form.hashtag.substr(1) : this.state.form.hashtag)} onChange={this.handleChange} />
+                  <ControlLabel>Insert Trend or Hashtag here (hashtag starts with '#'): </ControlLabel>
+                  <FormControl style={{width: '366px'}} autoComplete='off' type='input' pattern='[a-zA-Z0-9_#]+[a-zA-Z0-9_]{1,50}' name='hashtag' placeholder='Enter hashtag/trend text...' defaultValue={(this.state.form.hashtag)} onChange={this.handleChange} />
                 </FormGroup>
               </TabPanel>
               <TabPanel style={{width: '366px', 'border-radius': '2px', 'background': 'linear-gradient(white, #c0deed)'}}>
@@ -312,10 +313,10 @@ class Home extends Component {
                         {
                           label: 'Sum',
                           data: [
-                            ['No ' + emotion + ' can be inferred  can be inferred', ordinal_class[emotion][0]],
-                            ['Low amount of ' + emotion + ' can be inferred can be inferred', ordinal_class[emotion][1]],
-                            ['Moderate amount of ' + emotion + ' can be inferred can be inferred', ordinal_class[emotion][2]],
-                            ['High amount of ' + emotion + ' can be inferred can be inferred', ordinal_class[emotion][3]]]
+                            ['No ' + emotion + ' can be inferred', ordinal_class[emotion][0]],
+                            ['Low amount of ' + emotion + ' can be inferred', ordinal_class[emotion][1]],
+                            ['Moderate amount of ' + emotion + ' can be inferred', ordinal_class[emotion][2]],
+                            ['High amount of ' + emotion + ' can be inferred', ordinal_class[emotion][3]]]
                         }
                       ]}
                       series={{type: 'bar', color: 'red'}}
@@ -333,7 +334,7 @@ class Home extends Component {
             </TabPanel>
             <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className='tabs-panel'>
               <div>
-                <h1 align='center' style={{fontSize: '50px', textTransform: 'uppercase', textDecoration: 'underline'}}>EMOTIONS</h1>
+                <h1 align='center' style={{fontSize: '40px', textTransform: 'uppercase', textDecoration: 'underline'}}>EMOTIONS</h1>
                 <div
                   style={{
                     width: '100%',
@@ -348,14 +349,15 @@ class Home extends Component {
                         data: [
                           ['Anger', 12],
                           ['Anticipation', 34],
-                          ['Disgust', 80],
+                          ['Disgust', 10],
                           ['Fear', 21],
-                          ['Joy', 45],
+                          ['Joy', 31],
                           ['Love', 9],
-                          ['Optimism', 63],
+                          ['Optimism', 13],
                           ['Pessimism', 22],
                           ['Sadness', 11],
-                          ['Trust', 41],
+                          ['Sadness', 11],
+                          ['Trust', 19],
                         ]
                       }
                     ]}
