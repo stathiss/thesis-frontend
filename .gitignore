@@ -9,3 +9,6 @@ env/
 
 # yarn error log
 yarn-error.log
+
+# eslint
+.eslintrc.js

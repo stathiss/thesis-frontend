@@ -28,7 +28,9 @@ class Home extends Component {
       top: [],
       trends: [],
       tweets: [],
-      searches: []
+      searches: [],
+      e_c: []
+
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -68,7 +70,9 @@ class Home extends Component {
           averages: json['averages'],
           ordinal_class: json['ordinal_class'],
           top: json['top'],
-          tweets: json['tweets']
+          tweets: json['tweets'],
+          e_c: json['e_c']
+
         });
       });
   }
@@ -94,7 +98,7 @@ class Home extends Component {
 
 
   render() {
-    const { averages, tweets, isLoaded, loading, ordinal_class, trends, searches, top} = this.state;
+    const { averages, tweets, isLoaded, loading, ordinal_class, trends, searches, top, e_c} = this.state;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh'}}>
@@ -155,7 +159,7 @@ class Home extends Component {
                 <div><br/></div>
                 <FormGroup controlId='formControlsText'>
                   <ControlLabel>Insert Trend or Hashtag here (hashtag starts with '#'): </ControlLabel>
-                  <FormControl style={{width: '366px'}} autoComplete='off' type='input' pattern='[a-zA-Z0-9_#]+[a-zA-Z0-9_]{1,50}' name='hashtag' placeholder='Enter hashtag/trend text...' defaultValue={(this.state.form.hashtag)} onChange={this.handleChange} />
+                  <FormControl style={{width: '366px'}} autoComplete='off' type='input' pattern='[a-zA-Z0-9_#]+[a-zA-Z0-9_ ]{1,50}' name='hashtag' placeholder='Enter hashtag/trend text...' defaultValue={(this.state.form.hashtag)} onChange={this.handleChange} />
                 </FormGroup>
               </TabPanel>
               <TabPanel style={{width: '366px', 'border-radius': '2px', 'background': 'linear-gradient(white, #c0deed)'}}>
@@ -215,7 +219,7 @@ class Home extends Component {
               <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className='tabs'> Classification Plots </Tab>
             </TabList>
             <TabPanel style={{ backgroundColor: '#0084b4', color:'black' }} className='tabs-panel'>
-              <table className='table table-hover'>
+              <table style = {{'white-space': 'unset'}}  className='table table-hover'>
                 <thead>
                 <tr>
                   <th scope='col'>#</th>
@@ -345,26 +349,26 @@ class Home extends Component {
                   <Chart
                     data={[
                       {
-                        label: 'Fear',
+                        label: 'Sum',
                         data: [
-                          ['Anger', 12],
-                          ['Anticipation', 34],
-                          ['Disgust', 10],
-                          ['Fear', 21],
-                          ['Joy', 31],
-                          ['Love', 9],
-                          ['Optimism', 13],
-                          ['Pessimism', 22],
-                          ['Sadness', 11],
-                          ['Sadness', 11],
-                          ['Trust', 19],
+                          ['Anger', e_c[0]],
+                          ['Anticipation', e_c[1]],
+                          ['Disgust', e_c[2]],
+                          ['Fear', e_c[3]],
+                          ['Joy', e_c[4]],
+                          ['Love', e_c[5]],
+                          ['Optimism', e_c[6]],
+                          ['Pessimism', e_c[7]],
+                          ['Sadness', e_c[8]],
+                          ['Surprise', e_c[9]],
+                          ['Trust', e_c[10]],
                         ]
                       }
                     ]}
                     series={{type: 'bar', color: 'red'}}
                     axes={[
                       {primary: true, type: 'ordinal', position: 'bottom'},
-                      {position: 'left', type: 'linear', stacked: true},
+                      {position: 'left', type: 'linear', stacked: true, hardMax: 100},
                     ]}
                     primaryCursor
                     tooltip
@@ -375,6 +379,9 @@ class Home extends Component {
             </TabPanel>
           </Tabs> }
         </div>
+          <div style={{width: "100%", textAlign: "center", position: "absolute", bottom: "5px" }}>
+              Proudly Developed by <strong><a href="http://www.linkedin.com/in/george-n-stathis" target="_blank">George Stathis</a></strong>
+          </div>
       </div>
     );
   };
