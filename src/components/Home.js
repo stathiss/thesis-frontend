@@ -13,6 +13,7 @@ import sadness_emoji from '../assets/images/sadness_emoji.png';
 import joy_emoji from '../assets/images/joy_emoji.png';
 import anger_emoji from '../assets/images/anger_emoji.png';
 import 'react-tabs/style/react-tabs.css';
+import NavBar from "./NavBar";
 
 const BACKEND_API = 'http://127.0.0.1:5000';
 
@@ -101,6 +102,7 @@ class Home extends Component {
     const { averages, tweets, isLoaded, loading, ordinal_class, trends, searches, top, e_c} = this.state;
     return (
       <div>
+      <NavBar/>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh'}}>
           <img src={logo} width={500} height={500} alt='logo'/>
         </div>

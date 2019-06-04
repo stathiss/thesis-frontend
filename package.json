@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "antd": "^3.5.3",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
