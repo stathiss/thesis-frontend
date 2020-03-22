@@ -214,13 +214,13 @@ class Home extends Component {
           { isLoaded &&
           <Tabs>
             <TabList className='tabs-list'>
-              <Tab style={{ backgroundColor: '#8aacb8', width: 250 }} className='tabs'> Tweets </Tab>
+              <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className='tabs'> Tweets </Tab>
               <Tab style={{ backgroundColor: 'white', width: 250 }} className='tabs'> Top Tweets </Tab>
-              <Tab style={{ backgroundColor: '#8aacb8', width: 250 }} className='tabs'> Regression Plots </Tab>
+              <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className='tabs'> Regression Plots </Tab>
               <Tab style={{ backgroundColor: 'white', width: 250 }} className='tabs'> Ordinal Classification Plots </Tab>
-              <Tab style={{ backgroundColor: '#8aacb8', width: 250 }} className='tabs'> Classification Plots </Tab>
+              <Tab style={{ backgroundColor: '#0084b4', width: 250 }} className='tabs'> Classification Plots </Tab>
             </TabList>
-            <TabPanel style={{ backgroundColor: '#8aacb8', color:'black' }} className='tabs-panel'>
+            <TabPanel style={{ backgroundColor: '#0084b4', color:'black' }} className='tabs-panel'>
               <table style = {{'white-space': 'unset'}}  className='table table-hover'>
                 <thead>
                 <tr>
@@ -271,7 +271,7 @@ class Home extends Component {
                 </div>
               </div>
             </TabPanel>
-            <TabPanel style={{ backgroundColor: '#8aacb8', color: 'black' }} className='tabs-panel'>
+            <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className='tabs-panel'>
               { ['anger', 'fear', 'joy', 'sadness'].map(emotion => (
                 <div>
                   <h1 align='center' style={{fontSize: '40px', textTransform: 'uppercase', textDecoration: 'underline'}}>{emotion}</h1>
@@ -338,7 +338,7 @@ class Home extends Component {
                 </div>
               ))}
             </TabPanel>
-            <TabPanel style={{ backgroundColor: '#8aacb8', color: 'black' }} className='tabs-panel'>
+            <TabPanel style={{ backgroundColor: '#0084b4', color: 'black' }} className='tabs-panel'>
               <div>
                 <h1 align='center' style={{fontSize: '40px', textTransform: 'uppercase', textDecoration: 'underline'}}>EMOTIONS</h1>
                 <div
