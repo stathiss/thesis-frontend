@@ -15,7 +15,8 @@ import anger_emoji from '../assets/images/anger_emoji.png';
 import 'react-tabs/style/react-tabs.css';
 import NavBar from "./NavBar";
 
-const BACKEND_API = 'http://127.0.0.1:5000';
+console.log(process.env)
+const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
 class Home extends Component {
   constructor(props) {
@@ -231,7 +232,7 @@ class Home extends Component {
                 </thead>
                 <tbody>
                 {tweets.sort((a, b) => { return a.counter - b.counter} ).map(item => (
-                  <tr style={{cursor: 'pointer'}} onClick={ () => window.open('https://twitter.com/statuses/' + item.id, '_blank') }>
+                  <tr style={{cursor: 'pointer'}} onClick={ () => window.open('https://twitter.com/i/web/status/' + item.id, '_blank') }>
                     <th>{item.counter}</th>
                     <td>{item.author}</td>
                     <td>{item.text}</td>
