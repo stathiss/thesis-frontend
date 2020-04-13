@@ -15,7 +15,6 @@ import anger_emoji from '../assets/images/anger_emoji.png';
 import 'react-tabs/style/react-tabs.css';
 import NavBar from "./NavBar";
 
-console.log(process.env)
 const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
 class Home extends Component {
@@ -232,7 +231,7 @@ class Home extends Component {
                 </thead>
                 <tbody>
                 {tweets.sort((a, b) => { return a.counter - b.counter} ).map(item => (
-                  <tr style={{cursor: 'pointer'}} onClick={ () => window.open('https://twitter.com/i/web/status/' + item.id, '_blank') }>
+                  <tr style={{cursor: 'pointer'}} onClick={ () => window.open('https://twitter.com/' + item.screen_name + '/status/' + item.id, '_blank') }>
                     <th>{item.counter}</th>
                     <td>{item.author}</td>
                     <td>{item.text}</td>
@@ -243,14 +242,14 @@ class Home extends Component {
             </TabPanel>
             <TabPanel style={{ backgroundColor: 'white', color: 'black' }} className='tabs-panel'>
               <h1 align='center' style={{ fontSize: '50px'}}>Top Tweets</h1>
-              <div className='circles' onClick={ () => window.open('https://twitter.com/statuses/' + top['anger']['id'], '_blank') }>
+              <div className='circles' onClick={ () => window.open('https://twitter.com/' + top['anger']['screen_name'] + '/status/' + top['anger']['id'], '_blank') }>
                 <div className='circle-with-text multi-line-text'>
                   <h1>Anger</h1>
                   {top['anger']['tweet']}
                   <img style={{ right: 0, bottom: 0}} src={anger_emoji} width={125} height={125} alt='anger_emoji'/>
                   <div className='score'> {top['anger']['intensity']} </div>
                 </div>
-                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['fear']['id'], '_blank') }>
+                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/' + top['fear']['screen_name'] + '/status/' + top['fear']['id'], '_blank') }>
                   <h1>Fear</h1>
                   {top['fear']['tweet']}
                   <img style={{ left: 0, bottom: 0}} src={fear_emoji} width={125} height={125} alt='fear_emoji'/>
@@ -258,13 +257,13 @@ class Home extends Component {
                 </div>
               </div>
               <div className='circles'>
-                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['joy']['id'], '_blank') }>
+                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/' + top['joy']['screen_name'] + '/status/' + top['joy']['id'], '_blank') }>
                   <h1>Joy</h1>
                   {top['joy']['tweet']}
                   <img style={{ right: 0, bottom: 0}} src={joy_emoji} width={125} height={125} alt='joy_emoji'/>
                   <div className='score'> {top['joy']['intensity']} </div>
                 </div>
-                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/statuses/' + top['sadness']['id'], '_blank') }>
+                <div className='circle-with-text multi-line-text' onClick={ () => window.open('https://twitter.com/' + top['sadness']['screen_name'] + '/statuses/' + top['sadness']['id'], '_blank') }>
                   <h1>Sadness</h1>
                   {top['sadness']['tweet']}
                   <img style={{ left: 0, bottom: 0}} src={sadness_emoji} width={125} height={125} alt='sadness_emoji'/>
